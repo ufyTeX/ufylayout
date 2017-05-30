@@ -44,9 +44,9 @@ local function nodelist_to_table(head)
     elseif n.id == node.id("dir") then
       -- FIXME handle all supported directions
       if n.dir == "+TLT" then
-        item.char = 0x202A -- LEFT-TO-RIGHT EMBEDDING
+        item.char = 0x202D -- LEFT-TO-RIGHT OVERRIDE
       elseif n.dir == "+TRT" then
-        item.char = 0x202B -- RIGHT-TO-LEFT EMBEDDING
+        item.char = 0x202E -- RIGHT-TO-LEFT OVERRIDE
       elseif n.dir == "-TLT" or n.dir == "-TRT" then
         item.char = 0x202C -- POP DIRECTIONAL FORMATTING
       end
