@@ -41,8 +41,18 @@ local function nodelist_to_table(head)
       item.char = 0x0020
       item.script = hb.Script.HB_SCRIPT_COMMON
       item.font = last_font
+    elseif n.id == node.id("dir") then
+      -- FIXME handle all supported directions
+      if n.dir == "+TLT" then
+        item.char = 0x202A -- LEFT-TO-RIGHT EMBEDDING
+      elseif n.dir == "+TRT" then
+        item.char = 0x202B -- RIGHT-TO-LEFT EMBEDDING
+      elseif n.dir == "-TLT" or n.dir == "-TRT" then
+        item.char = 0x202C -- POP DIRECTIONAL FORMATTING
+      end
+      item.script = hb.Script.HB_SCRIPT_COMMON
     else
-      item.char = 0xfffc
+      item.char = 0xfffc -- OBJECT REPLACEMENT CHARACTER
       item.script = hb.Script.HB_SCRIPT_COMMON
     end
   end
@@ -154,6 +164,16 @@ local function reverse_runs(runs, start, len)
   end
 end
 
+
+local removeClasses = {
+  [ucdn.UCDN_BIDI_CLASS_LRO]  = true,
+  [ucdn.UCDN_BIDI_CLASS_RLO] = true,
+  [ucdn.UCDN_BIDI_CLASS_RLE] = true,
+  [ucdn.UCDN_BIDI_CLASS_LRE] = true,
+  [ucdn.UCDN_BIDI_CLASS_PDF] = true,
+  [ucdn.UCDN_BIDI_CLASS_BN]  = true,
+}
+
 -- Apply the Unicode BiDi algorithm, segment the nodes into runs, and reorder the runs.
 --
 -- Returns a table containing the runs after reordering.
@@ -172,7 +192,16 @@ local function bidi_reordered_runs(nodetable, base_dir)
   local linebreaks = { #codepoints + 1 }
   local levels = para:getLevels(linebreaks)
 
-  -- FIXME handle embedded RLE, LRE, RLI, LRI and PDF characters at this point and remove them.
+  -- handle embedded RLE, LRE, RLI, LRI and PDF characters at this point and remove them.
+  debug.log("Removing classes")
+  for i = #levels, 1 , -1 do
+    if removeClasses[types[i]] then
+      debug.log("removing %d", i)
+      table.remove(types, i)
+      table.remove(levels, i)
+      table.remove(nodetable,i)
+    end
+  end
 
   if #levels == 0 then return {} end
 
