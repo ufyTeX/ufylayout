@@ -307,7 +307,7 @@ local function nodetable_to_list(nodetable, runs, dir)
       for _, v in ipairs(glyphs) do
         local n,k -- Node and (optional) Kerning
         local char = metrics.backmap[v.codepoint]
-        debug.log("glyph idx: U+%04X, glyph cluster: %d", char, v.cluster + 1)
+        debug.log("codepoint: U+%04X, glyph idx: U+%04X, glyph cluster: %d", v.codepoint, char, v.cluster + 1)
         if nodetable[v.cluster+1].char == 0x20 then
           assert(char == 0x20 or char == 0xa0, "Expected char to be 0x20 or 0xa0")
           n = node.new("glue")
