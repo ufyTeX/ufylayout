@@ -1,11 +1,11 @@
 package = "ufylayout"
 version = "scm-1"
 source = {
-   url = "git+https://github.com/deepakjois/ufylayout"
+   url = "git+https://github.com/ufytex/ufylayout"
 }
 description = {
    summary = "BiDi text reordering and Harfbuzz rendering for ufy",
-   homepage = "https://github.com/deepakjois/ufylayout",
+   homepage = "https://github.com/ufytex/ufylayout",
    license = "MIT",
    maintainer = "Deepak Jois <deepak.jois@gmail.com>"
 }
